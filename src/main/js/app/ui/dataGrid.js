@@ -136,6 +136,9 @@ class DataGrid {
     if (change !== null) {
       for (var i = 0; i < change.length; i++) {
         var [idx, field, oldV, newV] = change[i];
+        if (oldV === newV) {
+          continue;
+        }
         var uid = this.data[idx].uid;
         var doc = this._dirty[uid] = this._dirty[uid] || {};
         assign(doc, field, newV);
