@@ -141,6 +141,12 @@ class DataGrid {
         }
         var uid = this.data[idx].uid;
         var doc = this._dirty[uid] = this._dirty[uid] || {};
+
+        // Split csv values into array
+        if (Array.isArray(oldV)) {
+          newV = newV.split(',');
+        }
+
         assign(doc, field, newV);
       }
       if (this.autosave) {

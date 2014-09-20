@@ -15,28 +15,37 @@
  *     Nelson Silva <nelson.silva@inevo.pt>
  */
 import {Select2Editor} from './select2';
-import {Directory} from '../../nuxeo/rpc/directory';
+import {Query} from '../../nuxeo/rpc/query';
 
-class DirectoryEditor extends Select2Editor {
+class DocumentEditor extends Select2Editor {
   query(connection, properties, term) {
-    var directory = new Directory(connection); // Directory name is a widget property
+    var q = new Query(connection);
     // Set the properties
-    Object.assign(directory, properties);
-    // Perform the search
-    return directory.search(term);
+    Object.assign(q.params, properties);
+    q.nxql = properties.query;
+    q.params.searchTerm = term + '%';
+    q.pageProvider = properties.pageProviderName;
+    q.page = 0;
+    q.pageSize = 20;
+    // Execute the query
+    return q.run().then((result) => result.entries);
   }
 
-  formatter(entry) {
-    return entry.displayLabel;
+  formatter(doc) {
+    var markup = '<table><tbody>';
+    markup += '<tr><td>';
+    if (doc.properties && doc.properties['common:icon']) {
+      markup += `<img src='${this.connection.baseURL}${doc.properties['common:icon']}'/>`;
+    }
+    markup += '</td><td>';
+    markup += doc.title;
+    markup += '</td></tr></tbody></table>';
+    return markup;
   }
 
   getEntryId(item) {
-    if (item.computedId) {
-      return item.computedId;
-    } else {
-      return item.id;
-    }
+    return item.uid;
   }
 }
 
-export {DirectoryEditor};
+export {DocumentEditor};

@@ -15,9 +15,11 @@
  *     Nelson Silva <nelson.silva@inevo.pt>
  */
 import {DirectoryEditor} from './editors/directory';
+import {DocumentEditor} from './editors/document';
 import {UserEditor} from './editors/user';
 
 Handsontable.editors.registerEditor('directory', DirectoryEditor);
+Handsontable.editors.registerEditor('document', DocumentEditor);
 Handsontable.editors.registerEditor('user', UserEditor);
 
 export const WIDGETS = {
@@ -40,6 +42,13 @@ export const WIDGETS = {
   },
   multipleUsersSuggestion: {
     editor: 'user',
+    multiple: true
+  },
+  multipleDocumentSuggestion: {
+    editor: 'document'
+  },
+  multipleDocumentsSuggestion: {
+    editor: 'document',
     multiple: true
   },
   datetime: {
